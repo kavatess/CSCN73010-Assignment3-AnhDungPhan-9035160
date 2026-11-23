@@ -51,6 +51,13 @@ python -m unitconv 10 km mi
 - `.github/workflows/sonarcloud.yml` runs on push to `main` (and manually). It checks out the repo with full history (`fetch-depth: 0`, needed for blame and new-code detection), sets up Python 3.12, installs `requirements-dev.txt`, runs pytest with coverage to `coverage.xml`, then runs `SonarSource/sonarqube-scan-action@v6`.
 - Authentication uses the `SONAR_TOKEN` GitHub repository secret; no token value is stored in the repo.
 
+## Quality improvements (Part D)
+
+- Workflow: `SonarSource/sonarqube-scan-action` is pinned to the full commit SHA of v6.0.0 instead of the movable `v6` tag.
+- Dependencies: `requirements-dev.in` holds the direct dependencies and `requirements-dev.txt` is the hash-locked file generated with `pip-compile --generate-hashes`. CI installs it with `--only-binary :all: --require-hashes`.
+- Code: temperatures below absolute zero and NaN now raise `ValueError` (with tests), and `convert()` no longer hides the real error message.
+- Coverage: `.coveragerc` makes `coverage.xml` use repo-relative paths such as `unitconv/cli.py`, and the tests now also cover `python -m unitconv`.
+
 ## Baseline status
 
 This is the untouched baseline before any quality improvements. Quality work (static analysis findings, refactoring, and re-analysis) will be made in later commits.
